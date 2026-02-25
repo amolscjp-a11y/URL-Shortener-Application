@@ -1,4 +1,3 @@
-
 package com.example.urlshortener.service;
 
 import com.example.urlshortener.exception.UrlNotFoundException;
@@ -50,7 +49,7 @@ public class UrlService {
         return domainCount.entrySet()
                 .stream()
                 .sorted((a, b) -> b.getValue() - a.getValue())
-                .limit(10)
+                .limit(3) // return top 3 domains as required
                 .collect(Collectors.toMap(
                         Map.Entry::getKey,
                         Map.Entry::getValue,
