@@ -1,6 +1,12 @@
 
+spring:
+  application:
+    name: url-shortener
+
 server:
   port: 8080
+  servlet:
+    context-path: /
 
 app:
   base-url: http://localhost:8080
@@ -8,3 +14,6 @@ app:
 logging:
   level:
     root: INFO
+    com.example.urlshortener: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"

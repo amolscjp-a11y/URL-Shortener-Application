@@ -2,14 +2,80 @@
 
 A Spring Boot REST API application that provides URL shortening functionality with metrics tracking.
 
-## Features
+## 🎯 Key Features
 
+✨ **Complete URL Shortening System**
 - **URL Shortening**: Convert long URLs into short, easy-to-share codes
 - **URL Redirection**: Redirect from short codes to original URLs
+- **URL Management**: Update and delete shortened URLs
 - **Metrics Tracking**: Track the most popular domains
 - **Base62 Encoding**: Efficient URL encoding using Base62 algorithm
 - **Error Handling**: Global exception handling with meaningful error responses
 - **Input Validation**: Request validation for data integrity
+
+🔝 **Top 3 Domains Metrics (NEW!)**
+- **Endpoint**: `GET /api/metrics/top-domains`
+- Returns the top 3 domain names that have been shortened the most
+- Perfect for analyzing user behavior and website popularity
+- **Example**: If users shortened 6 YouTube, 4 StackOverflow, 2 Wikipedia URLs → Returns:
+  ```json
+  {
+    "youtube.com": 6,
+    "stackoverflow.com": 4,
+    "wikipedia.org": 2
+  }
+  ```
+
+🐳 **Docker Support**
+- Production-ready multi-stage Dockerfile
+- Docker Compose configuration included
+- Optimized image size (~100MB)
+- Automated CI/CD with GitHub Actions
+
+📚 **Complete Documentation**
+- API Testing Guide with examples
+- Docker Deployment Guide
+- GitHub & Docker Hub setup instructions
+- Quick start scripts for Windows/Linux/Mac
+
+## 🚀 Quick Start
+
+### Using Maven
+```bash
+mvn spring-boot:run
+```
+
+### Using Docker
+```bash
+docker build -t url-shortener:latest .
+docker run -p 8080:8080 url-shortener:latest
+```
+
+### Using Docker Compose
+```bash
+docker-compose up
+```
+
+### Using Quick Start Scripts
+- **Windows**: `.\quickstart.bat`
+- **Linux/Mac**: `./quickstart.sh`
+
+Then test the **Top 3 Domains endpoint**:
+```bash
+curl http://localhost:8080/api/metrics/top-domains
+```
+
+---
+
+## 📖 Documentation
+
+| Document | Purpose |
+|----------|---------|
+| [API_TESTING_GUIDE.md](./API_TESTING_GUIDE.md) | Complete guide to test all endpoints including the top 3 domains metrics |
+| [DOCKER_GUIDE.md](./DOCKER_GUIDE.md) | Docker deployment, image building, and production setup |
+| [GITHUB_DEPLOYMENT_GUIDE.md](./GITHUB_DEPLOYMENT_GUIDE.md) | GitHub repository and Docker Hub setup with CI/CD |
+
+---
 
 ## Project Structure
 
@@ -336,4 +402,85 @@ For issues and questions:
 - Basic URL shortening functionality
 - Metrics tracking
 - REST API endpoints
+
+## Quick Local Run (if Maven is not installed locally)
+
+If you don't have Maven installed on your machine, you have a few options:
+
+- Build the JAR on a machine that has Maven (or in CI), then copy the artifact here and run it with Java:
+
+  1. On a machine with Maven installed, run:
+     mvn clean package
+  2. Copy the generated JAR from `target/` (for example `url-shortener-0.0.1-SNAPSHOT.jar`) into this project directory.
+  3. Run the application with Java:
+     java -jar target\url-shortener-0.0.1-SNAPSHOT.jar
+
+- Or open the project in IntelliJ IDEA or another IDE and run `UrlShortenerApplication` as a Spring Boot application.
+
+- Test script: A PowerShell helper `test-endpoints.ps1` is included in the project root to exercise the endpoints once the app is running.
+
+## Docker Deployment
+
+### Build the Docker Image
+
+```bash
+# Navigate to the project directory
+cd URL-Shortener-Application
+
+# Build the Docker image
+docker build -t url-shortener:latest .
+```
+
+### Run the Application in Docker
+
+```bash
+# Run the container
+docker run -p 8080:8080 url-shortener:latest
+
+# The application will be available at: http://localhost:8080
+```
+
+### Run with Custom Configuration
+
+```bash
+# Run with custom base URL for production
+docker run -p 8080:8080 \
+  -e APP_BASE_URL=https://myshortener.com \
+  url-shortener:latest
+
+# Run in detached mode
+docker run -d --name url-shortener -p 8080:8080 url-shortener:latest
+```
+
+### Test the Docker Container
+
+```bash
+# Test the top 3 domains endpoint
+curl http://localhost:8080/api/metrics/top-domains
+
+# Create a shortened URL
+curl -X POST http://localhost:8080/api/url/shorten \
+  -H "Content-Type: application/json" \
+  -d '{"originalUrl":"https://www.youtube.com/watch?v=example"}'
+```
+
+### Push to Docker Registry
+
+```bash
+# Tag and push to Docker Hub
+docker tag url-shortener:latest yourusername/url-shortener:latest
+docker push yourusername/url-shortener:latest
+
+# Run from Docker Hub
+docker run -p 8080:8080 yourusername/url-shortener:latest
+```
+
+For comprehensive Docker documentation including Docker Compose setup, AWS ECR, Google GCR, and troubleshooting, see [DOCKER_GUIDE.md](./DOCKER_GUIDE.md).
+
+### Docker Image Details
+
+- **Base Build Image**: `maven:3.8.1-openjdk-8-slim` (for compilation)
+- **Runtime Image**: `eclipse-temurin:8-jre-alpine` (minimal JRE, ~100MB)
+- **Multi-stage Build**: Optimized for size (~70% reduction compared to single-stage)
+- **Exposed Port**: 8080
 
